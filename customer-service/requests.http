@@ -1,0 +1,47 @@
+### Customer Service - REST Client test file
+
+@base = http://localhost:3001
+@userId = REPLACE_WITH_USER_ID
+
+### Register a new user
+POST {{base}}/register
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "surname": "Doe",
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+
+###
+
+### Login
+POST {{base}}/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+
+###
+
+### Get user profile (replace userId with the _id returned from register/login)
+GET {{base}}/users/{{userId}}
+
+###
+
+### Get user notifications (inbox)
+GET {{base}}/users/{{userId}}/notifications
+
+###
+
+### Create a notification manually
+POST {{base}}/users/{{userId}}/notifications
+Content-Type: application/json
+
+{
+  "message": "Test notification from REST client",
+  "type": "ride_ready"
+}

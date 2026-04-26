@@ -1,0 +1,38 @@
+### Booking Service - REST Client test file
+
+@base = http://localhost:3002
+@userId = REPLACE_WITH_USER_ID
+@bookingId = REPLACE_WITH_BOOKING_ID
+
+### Create a new booking
+POST {{base}}/bookings
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "startLocation": "Valletta, Malta",
+  "endLocation": "Sliema, Malta",
+  "dateTime": "2026-05-10T14:00:00.000Z",
+  "passengers": 2,
+  "cabType": "Premium"
+}
+
+###
+
+### Get current (upcoming) bookings for a user
+GET {{base}}/bookings/user/{{userId}}/current
+
+###
+
+### Get past (completed) bookings for a user
+GET {{base}}/bookings/user/{{userId}}/past
+
+###
+
+### Get a single booking by ID
+GET {{base}}/bookings/{{bookingId}}
+
+###
+
+### Manually mark a booking as completed
+PATCH {{base}}/bookings/{{bookingId}}/complete

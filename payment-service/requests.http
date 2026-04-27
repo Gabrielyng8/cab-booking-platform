@@ -1,0 +1,48 @@
+### Payment Service - REST Client test file
+
+@base = http://localhost:3003
+@userId = REPLACE_WITH_USER_ID
+@bookingId = REPLACE_WITH_BOOKING_ID
+@paymentId = REPLACE_WITH_PAYMENT_ID
+
+### Process a payment (daytime, 2 passengers, Premium, no discount)
+### totalPrice = baseFare(10) × cabMult(1.2) × daytimeMult(1) × passMult(1) × discount(1) = 12.00
+POST {{base}}/payments
+Content-Type: application/json
+
+{
+  "bookingId": "{{bookingId}}",
+  "userId": "{{userId}}",
+  "baseFare": 10,
+  "cabType": "Premium",
+  "passengers": 2,
+  "bookingDateTime": "2026-05-10T14:00:00.000Z",
+  "hasDiscount": false
+}
+
+###
+
+### Process a payment with nighttime rate and 5 passengers (Executive, with discount)
+### totalPrice = baseFare(10) × cabMult(1.4) × daytimeMult(1.2) × passMult(2) × discount(0.9) = 30.24
+POST {{base}}/payments
+Content-Type: application/json
+
+{
+  "bookingId": "{{bookingId}}",
+  "userId": "{{userId}}",
+  "baseFare": 10,
+  "cabType": "Executive",
+  "passengers": 5,
+  "bookingDateTime": "2026-05-10T03:00:00.000Z",
+  "hasDiscount": true
+}
+
+###
+
+### Get a single payment by ID
+GET {{base}}/payments/{{paymentId}}
+
+###
+
+### Get all payments for a user
+GET {{base}}/payments/user/{{userId}}

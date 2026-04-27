@@ -1,0 +1,18 @@
+### Fare Service - REST Client test file
+### Requires RAPIDAPI_KEY in .env
+
+@base = http://localhost:3004
+
+### Get fare estimate - Valletta to Sliema (Malta)
+GET {{base}}/fare?dep_lat=35.8997&dep_lng=14.5147&arr_lat=35.9122&arr_lng=14.5017
+
+###
+
+### Get fare estimate - Mdina to Marsaxlokk (Malta)
+GET {{base}}/fare?dep_lat=35.8878&dep_lng=14.4039&arr_lat=35.8408&arr_lng=14.5433
+
+###
+
+### Get fare estimate - Bugibba to Mellieha (Malta)
+GET {{base}}/fare?dep_lat=35.9512&dep_lng=14.4167&arr_lat=35.9598&arr_lng=14.3628
+

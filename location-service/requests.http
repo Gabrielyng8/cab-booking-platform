@@ -1,0 +1,60 @@
+### Location Service - REST Client test file
+### Requires RAPIDAPI_KEY in .env for weather endpoint
+
+@base = http://localhost:3005
+@userId = REPLACE_WITH_USER_ID
+@locationId = REPLACE_WITH_LOCATION_ID
+
+### Add a favourite location — Valletta
+POST {{base}}/locations
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "name": "Valletta",
+  "address": "Valletta, Malta",
+  "lat": 35.8997,
+  "lng": 14.5147
+}
+
+###
+
+### Add a favourite location — Sliema
+POST {{base}}/locations
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "name": "Sliema",
+  "address": "Sliema, Malta",
+  "lat": 35.9122,
+  "lng": 14.5017
+}
+
+###
+
+### Get all favourite locations for a user
+GET {{base}}/locations/user/{{userId}}
+
+###
+
+### Update a location
+PUT {{base}}/locations/{{locationId}}
+Content-Type: application/json
+
+{
+  "name": "Valletta City Gate",
+  "address": "City Gate, Valletta, Malta",
+  "lat": 35.8989,
+  "lng": 14.5133
+}
+
+###
+
+### Get weather for a saved location
+GET {{base}}/locations/{{locationId}}/weather
+
+###
+
+### Delete a location
+DELETE {{base}}/locations/{{locationId}}

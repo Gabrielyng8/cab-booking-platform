@@ -80,12 +80,37 @@ app.get('/users/:id/notifications', async (req, res) => {
     }
 });
 
-// Internal: create notification
+// Internal: create notification (called by events)
 app.post('/users/:id/notifications', async (req, res) => {
     try {
         const notif = new Notification({ userId: req.params.id, ...req.body });
         await notif.save();
         res.status(201).json(notif);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Internal: increment bookings & check discount
+// Returns { completedBookings, discountApplied } - this is the inter-service contract.
+app.patch('/users/:id/booking-completed', async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { $inc: { completedBookings: 1 } },
+            { new: true }
+        );
+        res.json({ completedBookings: user.completedBookings, discountApplied: user.discountApplied });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Internal: mark discount as applied
+app.patch('/users/:id/apply-discount', async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id, { discountApplied: true }, { new: true });
+        res.json({ discountApplied: user.discountApplied });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

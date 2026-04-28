@@ -37,7 +37,7 @@ GET {{base}}/users/{{userId}}/notifications
 
 ###
 
-### Create a notification manually
+### Create a notification manually (normally called by booking-service events)
 POST {{base}}/users/{{userId}}/notifications
 Content-Type: application/json
 
@@ -45,3 +45,13 @@ Content-Type: application/json
   "message": "Test notification from REST client",
   "type": "ride_ready"
 }
+
+###
+
+### Increment completed bookings (internal endpoint used by booking-service)
+PATCH {{base}}/users/{{userId}}/booking-completed
+
+###
+
+### Apply discount flag (internal endpoint used by booking-service)
+PATCH {{base}}/users/{{userId}}/apply-discount

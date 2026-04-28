@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const cors = require('cors');
+const EventEmitter = require('events');
 require('dotenv').config();
 
 const app = express();
@@ -27,6 +28,8 @@ const BookingSchema = new mongoose.Schema({
 
 const Booking = mongoose.model('Booking', BookingSchema);
 
+const bookingEvents = new EventEmitter();
+
 const CUSTOMER_SERVICE = process.env.CUSTOMER_SERVICE_URL || 'http://localhost:3001';
 
 // Create booking
@@ -45,6 +48,9 @@ app.post('/bookings', async (req, res) => {
         await booking.save();
 
         res.status(201).json(booking);
+
+        // Publish the event - listeners handle everything from here
+        bookingEvents.emit('booking:created', booking);
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -88,7 +94,7 @@ app.get('/bookings/:id', async (req, res) => {
     }
 });
 
-// Internal: Mark booking as completed
+// Mark booking as completed (internal use)
 app.patch('/bookings/:id/complete', async (req, res) => {
     try {
         const booking = await Booking.findByIdAndUpdate(req.params.id, { status: 'completed' }, { new: true });
@@ -99,3 +105,46 @@ app.patch('/bookings/:id/complete', async (req, res) => {
 });
 
 app.listen(process.env.PORT || 3002, () => console.log('Booking service running on port ' + (process.env.PORT || 3002)));
+
+// --- EVENTS ---
+
+// Task 5: Discount available — separate listener, fires once per user
+bookingEvents.on('discount:available', async (userId) => {
+    try {
+        await axios.post(`${CUSTOMER_SERVICE}/users/${userId}/notifications`, {
+            message: 'Congratulations! You have earned a 10% discount on your next booking!',
+            type: 'discount'
+        });
+        await axios.patch(`${CUSTOMER_SERVICE}/users/${userId}/apply-discount`);
+    } catch (err) {
+        console.error('discount event error:', err.message);
+    }
+});
+
+// Task 6: Ride ready - fires 3 minutes after booking
+bookingEvents.on('booking:created', (booking) => {
+    setTimeout(async () => {
+        try {
+            await axios.post(`${CUSTOMER_SERVICE}/users/${booking.userId}/notifications`, {
+                message: `Your cab is ready! From: ${booking.startLocation} → To: ${booking.endLocation}. Cab type: ${booking.cabType}.`,
+                type: 'ride_ready'
+            });
+
+            await Booking.findByIdAndUpdate(booking._id, { status: 'completed' });
+
+            const customerResponse = await axios.patch(
+                `${CUSTOMER_SERVICE}/users/${booking.userId}/booking-completed`
+            );
+
+            const { completedBookings, discountApplied } = customerResponse.data;
+
+            // Task 5: Discount - emit a second event when user completes 3 bookings, but only if they haven't already received the discount
+            if (completedBookings === 3 && !discountApplied) {
+                bookingEvents.emit('discount:available', booking.userId);
+            }
+
+        } catch (err) {
+            console.error('ride_ready event error:', err.message);
+        }
+    }, 3 * 60 * 1000);
+});

@@ -32,7 +32,10 @@ function calcMultipliers(cabType, dateTime, passengers, hasDiscount) {
     const cabMultipliers = { Economic: 1, Premium: 1.2, Executive: 1.4 };
     const cabMult = cabMultipliers[cabType] || 1;
 
-    const hour = new Date(dateTime).getHours();
+    const bookingTime = new Date(dateTime);
+    if (Number.isNaN(bookingTime.getTime())) throw new Error('Booking date and time is required');
+
+    const hour = bookingTime.getHours();
     // Midnight to 8am = 1.2x, 8am to midnight = 1x
     const daytimeMult = (hour >= 8) ? 1 : 1.2;
 
@@ -45,6 +48,38 @@ function calcMultipliers(cabType, dateTime, passengers, hasDiscount) {
     return { cabMult, daytimeMult, passMult, discountMult };
 }
 
+function buildBreakdown(baseFare, cabMult, daytimeMult, passMult, discountMult) {
+    const cabSubtotal = baseFare * cabMult;
+    const daytimeSubtotal = cabSubtotal * daytimeMult;
+    const passengersSubtotal = daytimeSubtotal * passMult;
+    const totalPrice = parseFloat((passengersSubtotal * discountMult).toFixed(2));
+
+    return {
+        baseFare: parseFloat(Number(baseFare).toFixed(2)),
+        cab: {
+            multiplier: cabMult,
+            subtotal: parseFloat(cabSubtotal.toFixed(2)),
+            extraCost: parseFloat((cabSubtotal - baseFare).toFixed(2))
+        },
+        time: {
+            multiplier: daytimeMult,
+            subtotal: parseFloat(daytimeSubtotal.toFixed(2)),
+            extraCost: parseFloat((daytimeSubtotal - cabSubtotal).toFixed(2))
+        },
+        passengers: {
+            multiplier: passMult,
+            subtotal: parseFloat(passengersSubtotal.toFixed(2)),
+            extraCost: parseFloat((passengersSubtotal - daytimeSubtotal).toFixed(2))
+        },
+        discount: {
+            multiplier: discountMult,
+            subtotal: totalPrice,
+            extraCost: parseFloat((totalPrice - passengersSubtotal).toFixed(2))
+        },
+        totalPrice
+    };
+}
+
 // Process payment
 app.post('/payments', async (req, res) => {
     try {
@@ -54,7 +89,8 @@ app.post('/payments', async (req, res) => {
             cabType, bookingDateTime, passengers, hasDiscount
         );
 
-        const totalPrice = parseFloat((baseFare * cabMult * daytimeMult * passMult * discountMult).toFixed(2));
+        const breakdown = buildBreakdown(baseFare, cabMult, daytimeMult, passMult, discountMult);
+        const totalPrice = breakdown.totalPrice;
 
         const payment = new Payment({
             bookingId, userId, baseFare, totalPrice,
@@ -63,7 +99,7 @@ app.post('/payments', async (req, res) => {
         });
         await payment.save();
 
-        res.status(201).json({ message: 'Payment processed', totalPrice, payment });
+        res.status(201).json({ message: 'Payment processed', totalPrice, breakdown, payment });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

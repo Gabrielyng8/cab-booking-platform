@@ -325,6 +325,24 @@
 
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             document.getElementById('nav-' + id)?.classList.add('active');
+
+            document.querySelectorAll('section input, section select, section textarea').forEach(control => {
+                if (control.type === 'checkbox' || control.type === 'radio') {
+                    control.checked = false;
+                } else {
+                    control.value = '';
+                }
+            });
+
+            ['reg-msg', 'login-msg', 'book-msg', 'loc-msg', 'fare-estimate'].forEach(messageId => {
+                const element = document.getElementById(messageId);
+                if (!element) return;
+                element.textContent = '';
+                element.className = '';
+            });
+
+            const confirmButton = document.getElementById('confirm-btn');
+            if (confirmButton) confirmButton.style.display = 'none';
         }
 
         function setLoggedIn(userId, firstName) {

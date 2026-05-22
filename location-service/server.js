@@ -24,6 +24,11 @@ const LocationSchema = new mongoose.Schema({
 
 const Location = mongoose.model('Location', LocationSchema);
 
+// --- API ENDPOINTS ---
+
+// Health check endpoint
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 // Add favourite location
 app.post('/locations', async (req, res) => {
     try {

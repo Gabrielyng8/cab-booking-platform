@@ -1,0 +1,27 @@
+### Booking Service
+GET https://booking-service-zhnp.onrender.com/health
+
+###
+
+### Customer Service
+GET https://customer-service-46et.onrender.com/health
+
+###
+
+### Fare Service
+GET https://fare-service-qb8w.onrender.com/health
+
+###
+
+### Gateway
+GET https://gateway-w9nv.onrender.com/health
+
+###
+
+### Location Service
+GET https://location-service-2q5k.onrender.com/health
+
+###
+
+### Payment Service
+GET https://payment-service-p23n.onrender.com/health

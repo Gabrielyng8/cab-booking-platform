@@ -80,6 +80,11 @@ function buildBreakdown(baseFare, cabMult, daytimeMult, passMult, discountMult) 
     };
 }
 
+// --- API ENDPOINTS ---
+
+// Health check endpoint
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 // Process payment
 app.post('/payments', async (req, res) => {
     try {

@@ -7,6 +7,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// --- API ENDPOINTS ---
+
+// Health check endpoint
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 // GET /fare?dep_lat=...&dep_lng=...&arr_lat=...&arr_lng=...
 app.get('/fare', async (req, res) => {
     try {

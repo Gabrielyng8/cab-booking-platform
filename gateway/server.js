@@ -48,5 +48,8 @@ app.use('/api/payments', forward(PAYMENT));
 app.use('/api/fare', forward(FARE));
 app.use('/api/locations', forward(LOCATION));
 
+// Health check endpoint
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Gateway running on port ${PORT}`));

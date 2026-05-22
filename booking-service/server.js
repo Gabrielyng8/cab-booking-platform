@@ -32,6 +32,11 @@ const bookingEvents = new EventEmitter();
 
 const CUSTOMER_SERVICE = process.env.CUSTOMER_SERVICE_URL || 'http://localhost:3001';
 
+// --- API ENDPOINTS ---
+
+// Health check endpoint
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 // Create booking
 app.post('/bookings', async (req, res) => {
     try {

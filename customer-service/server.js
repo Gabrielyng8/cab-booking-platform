@@ -33,6 +33,11 @@ const NotificationSchema = new mongoose.Schema({
 const User = mongoose.model('User', UserSchema);
 const Notification = mongoose.model('Notification', NotificationSchema);
 
+// --- API ENDPOINTS ---
+
+// Health check endpoint
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 // Register
 app.post('/register', async (req, res) => {
     try {

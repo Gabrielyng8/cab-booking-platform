@@ -121,7 +121,9 @@ bookingEvents.on('discount:available', async (userId) => {
     }
 });
 
-// Task 6: Ride ready - fires 3 minutes after booking
+// Task 6: Ride ready - fires after a configurable delay after booking
+const RIDE_READY_DELAY = parseInt(process.env.RIDE_READY_DELAY) || 3 * 60 * 1000; // Default: 3 minutes
+
 bookingEvents.on('booking:created', (booking) => {
     setTimeout(async () => {
         try {
@@ -146,5 +148,5 @@ bookingEvents.on('booking:created', (booking) => {
         } catch (err) {
             console.error('ride_ready event error:', err.message);
         }
-    }, 3 * 60 * 1000);
+    }, RIDE_READY_DELAY);
 });

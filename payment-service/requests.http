@@ -1,6 +1,7 @@
 ### Payment Service - REST Client test file
 
-@base = http://localhost:3003
+# @base = http://localhost:3003
+@base = https://payment-service-p23n.onrender.com
 @userId = REPLACE_WITH_USER_ID
 @bookingId = REPLACE_WITH_BOOKING_ID
 @paymentId = REPLACE_WITH_PAYMENT_ID

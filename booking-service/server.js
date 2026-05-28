@@ -113,7 +113,7 @@ app.listen(process.env.PORT || 3002, () => console.log('Booking service running 
 
 // --- EVENTS ---
 
-// Task 5: Discount available — separate listener, fires once per user
+// Task 5: Discount available - separate listener, fires once per user
 bookingEvents.on('discount:available', async (userId) => {
     try {
         await axios.post(`${CUSTOMER_SERVICE}/users/${userId}/notifications`, {

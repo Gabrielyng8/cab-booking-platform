@@ -1,11 +1,12 @@
 ### Booking Service - REST Client test file
 
-@base = http://localhost:3002
+# @base = http://localhost:3002
+@base = https://booking-service-zhnp.onrender.com
 @userId = REPLACE_WITH_USER_ID
 @bookingId = REPLACE_WITH_BOOKING_ID
 
 ### Create a new booking
-### NOTE: the ride_ready event fires 3 minutes after this - check inbox then.
+### (ride_ready event)
 POST {{base}}/bookings
 Content-Type: application/json
 

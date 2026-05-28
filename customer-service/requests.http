@@ -1,6 +1,7 @@
 ### Customer Service - REST Client test file
 
-@base = http://localhost:3001
+# @base = http://localhost:3001
+@base = https://customer-service-46et.onrender.com
 @userId = REPLACE_WITH_USER_ID
 
 ### Register a new user

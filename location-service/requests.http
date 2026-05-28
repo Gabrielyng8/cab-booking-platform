@@ -1,11 +1,12 @@
 ### Location Service - REST Client test file
 ### Requires RAPIDAPI_KEY in .env for weather endpoint
 
-@base = http://localhost:3005
+# @base = http://localhost:3005
+@base = https://location-service-2q5k.onrender.com
 @userId = REPLACE_WITH_USER_ID
 @locationId = REPLACE_WITH_LOCATION_ID
 
-### Add a favourite location — Valletta
+### Add a favourite location - Valletta
 POST {{base}}/locations
 Content-Type: application/json
 
@@ -19,7 +20,7 @@ Content-Type: application/json
 
 ###
 
-### Add a favourite location — Sliema
+### Add a favourite location - Sliema
 POST {{base}}/locations
 Content-Type: application/json
 

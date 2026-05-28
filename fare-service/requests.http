@@ -1,7 +1,8 @@
 ### Fare Service - REST Client test file
 ### Requires RAPIDAPI_KEY in .env
 
-@base = http://localhost:3004
+# @base = http://localhost:3004
+@base = https://fare-service-qb8w.onrender.com
 
 ### Get fare estimate - Valletta to Sliema (Malta)
 GET {{base}}/fare?dep_lat=35.8997&dep_lng=14.5147&arr_lat=35.9122&arr_lng=14.5017
